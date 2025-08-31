@@ -1,8 +1,6 @@
 package de.pjskilltrack.pjskilltrack.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.Set;
@@ -11,6 +9,7 @@ import java.util.Set;
 public class Skill
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
