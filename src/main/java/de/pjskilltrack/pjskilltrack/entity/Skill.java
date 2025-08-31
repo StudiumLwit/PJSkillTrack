@@ -17,6 +17,9 @@ public class Skill
     @ManyToMany(mappedBy = "skills")
     private Set<Faculty> faculties;
 
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Progress> progresses;
+
     public Long getId()
     {
         return id;
@@ -57,6 +60,16 @@ public class Skill
         this.faculties = faculties;
     }
 
+    public Set<Progress> getProgresses()
+    {
+        return progresses;
+    }
+
+    public void setProgresses(Set<Progress> progresses)
+    {
+        this.progresses = progresses;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -66,12 +79,13 @@ public class Skill
             return false;
         Skill skill = (Skill) o;
         return Objects.equals(id, skill.id) && Objects.equals(name, skill.name) && Objects.equals(description,
-            skill.description) && Objects.equals(faculties, skill.faculties);
+            skill.description) && Objects.equals(faculties, skill.faculties) && Objects.equals(progresses,
+            skill.progresses);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, name, description, faculties);
+        return Objects.hash(id, name, description, faculties, progresses);
     }
 }
