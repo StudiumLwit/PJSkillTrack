@@ -6,8 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Progress
-{
+public class Progress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,86 +22,70 @@ public class Progress
     @OneToMany(mappedBy = "progress", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StatusTransition> statusTransitions;
 
-    @Enumerated(EnumType.STRING)
-    private StatusType status;
     private String note;
 
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Skill getSkill()
-    {
-        return skill;
-    }
-
-    public void setSkill(Skill skill)
-    {
+    public Progress(final Skill skill, final Student student) {
         this.skill = skill;
-    }
-
-    public Student getStudent()
-    {
-        return student;
-    }
-
-    public void setStudent(Student student)
-    {
         this.student = student;
     }
 
-    public StatusType getStatus()
-    {
-        return status;
+    public Progress() {
     }
 
-    public void setStatus(StatusType status)
-    {
-        this.status = status;
+    public Long getId() {
+        return id;
     }
 
-    public String getNote()
-    {
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(final Skill skill) {
+        this.skill = skill;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(final Student student) {
+        this.student = student;
+    }
+
+    public String getNote() {
         return note;
     }
 
-    public void setNote(String note)
-    {
+    public void setNote(final String note) {
         this.note = note;
     }
 
-    public Set<StatusTransition> getStatusTransitions()
-    {
+    public Set<StatusTransition> getStatusTransitions() {
         return statusTransitions;
     }
 
-    public void setStatusTransitions(Set<StatusTransition> statusTransitions)
-    {
+    public void setStatusTransitions(final Set<StatusTransition> statusTransitions) {
         this.statusTransitions = statusTransitions;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(final Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Progress progress = (Progress) o;
+        final Progress progress = (Progress) o;
         return Objects.equals(id, progress.id) && Objects.equals(skill, progress.skill) && Objects.equals(student,
-            progress.student) && Objects.equals(statusTransitions,
-            progress.statusTransitions) && status == progress.status && Objects.equals(note, progress.note);
+                progress.student) && Objects.equals(statusTransitions,
+                progress.statusTransitions) && Objects.equals(note, progress.note);
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, skill, student, statusTransitions, status, note);
+    public int hashCode() {
+        return Objects.hash(id, skill, student, statusTransitions, note);
     }
 }

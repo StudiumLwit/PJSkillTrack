@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity(name = "status_transition")
-public class StatusTransition
-{
+public class StatusTransition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,58 +15,38 @@ public class StatusTransition
     private Progress progress;
 
     @Enumerated(EnumType.STRING)
-    private StatusType oldStatus;
-    @Enumerated(EnumType.STRING)
     private StatusType newStatus;
     private Timestamp changeTime;
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(final Long id) {
         this.id = id;
     }
 
-    public StatusType getOldStatus()
-    {
-        return oldStatus;
-    }
-
-    public void setOldStatus(StatusType oldStatus)
-    {
-        this.oldStatus = oldStatus;
-    }
-
-    public StatusType getNewStatus()
-    {
+    public StatusType getNewStatus() {
         return newStatus;
     }
 
-    public void setNewStatus(StatusType newStatus)
-    {
+    public void setNewStatus(final StatusType newStatus) {
         this.newStatus = newStatus;
     }
 
-    public Timestamp getChangeTime()
-    {
+    public Timestamp getChangeTime() {
         return changeTime;
     }
 
-    public void setChangeTime(Timestamp changeTime)
-    {
+    public void setChangeTime(final Timestamp changeTime) {
         this.changeTime = changeTime;
     }
 
-    public Progress getProgress()
-    {
+    public Progress getProgress() {
         return progress;
     }
 
-    public void setProgress(Progress progress)
-    {
+    public void setProgress(final Progress progress) {
         this.progress = progress;
     }
 }

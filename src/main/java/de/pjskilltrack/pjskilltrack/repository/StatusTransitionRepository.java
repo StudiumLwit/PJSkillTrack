@@ -1,14 +1,14 @@
 package de.pjskilltrack.pjskilltrack.repository;
 
 import de.pjskilltrack.pjskilltrack.entity.Progress;
-import de.pjskilltrack.pjskilltrack.entity.Skill;
-import de.pjskilltrack.pjskilltrack.entity.Student;
+import de.pjskilltrack.pjskilltrack.entity.StatusTransition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface ProgressRepository extends JpaRepository<Progress, Long> {
-    Optional<Progress> findByStudentAndSkill(Student student, Skill skill);
+public interface StatusTransitionRepository extends JpaRepository<StatusTransition, Long> {
+    Optional<StatusTransition> findFirstByProgressOrderByChangeTimeDesc(Progress progress);
+
 }
