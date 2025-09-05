@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class TestDataFactory {
+public class TestContextManager {
     @Autowired
     private ProgressRepository progressRepository;
     @Autowired
@@ -21,6 +21,14 @@ public class TestDataFactory {
     private FacultyRepository facultyRepository;
     @Autowired
     private StudentRepository studentRepository;
+
+    public void createAuthenticatedStudent() {
+        final Student student = new Student();
+        student.setEmail("student");
+        student.setName("Student");
+        student.setPassword("$2a$12$buvjYttpZPdMcjeZQ5FXDeZIolHUG5AoEsbbP29OtcIpLd1zlAzFW"); // password: student
+        studentRepository.save(student);
+    }
 
     public Student getAuthenticatedStudent() {
         // In AbstractDbTest, there is always one student created
@@ -78,6 +86,14 @@ public class TestDataFactory {
         final Faculty faculty2 = createFaculty("Pädiatrie");
         final Faculty faculty3 = createFaculty("Innere Medizin");
         return new TestContext(List.of(faculty1, faculty2, faculty3), List.of(), List.of(), List.of());
+    }
+
+    public void tearDown() {
+        statusTransitionRepository.deleteAll();
+        progressRepository.deleteAll();
+        skillRepository.deleteAll();
+        facultyRepository.deleteAll();
+        studentRepository.deleteAll();
     }
 
     public static class TestContext {

@@ -1,8 +1,9 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
+import de.pjskilltrack.pjskilltrack.entity.Skill;
 import de.pjskilltrack.pjskilltrack.entity.StatusType;
 import de.pjskilltrack.pjskilltrack.transfer.UpdateSkillOverviewDto;
-import de.pjskilltrack.pjskilltrack.util.TestDataFactory;
+import de.pjskilltrack.pjskilltrack.util.TestContextManager;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -22,7 +23,7 @@ public class SkillControllerTest extends AbstractDbTest {
 
     @Test
     void getSkillsByFacultyId_oneEntry() {
-        final TestDataFactory.TestContext context = testDataFactory.skillFacultyProgressAndStatusTransitionEach();
+        final TestContextManager.TestContext context = testContextManager.skillFacultyProgressAndStatusTransitionEach();
 
         givenStudent()
                 .when()
@@ -47,25 +48,26 @@ public class SkillControllerTest extends AbstractDbTest {
 
     @Test
     void updateSkill_existingProgress() {
-        final TestDataFactory.TestContext context = testDataFactory.skillFacultyProgressAndStatusTransitionEach();
+        final TestContextManager.TestContext context = testContextManager.skillFacultyProgressAndStatusTransitionEach();
+        final Skill contextSkill = context.skills.get(0);
 
         final UpdateSkillOverviewDto updateSkillOverviewDto = new UpdateSkillOverviewDto("Ich habe das gemacht", StatusType.DONE);
 
         givenStudent()
                 .body(updateSkillOverviewDto)
                 .when()
-                .put("/api/skill/1")
+                .put("/api/skill/" + contextSkill.getId())
                 .then()
                 .statusCode(200)
-                .body("name", equalTo(context.skills.get(0).getName()))
-                .body("description", equalTo(context.skills.get(0).getDescription()))
+                .body("name", equalTo(contextSkill.getName()))
+                .body("description", equalTo(contextSkill.getDescription()))
                 .body("note", equalTo(updateSkillOverviewDto.note()))
                 .body("statusType", equalTo(updateSkillOverviewDto.statusType().name()));
     }
 
     @Test
     void updateSkill_noExistingProgress() {
-        final TestDataFactory.TestContext context = testDataFactory.oneSkillAndFacultyEach();
+        final TestContextManager.TestContext context = testContextManager.oneSkillAndFacultyEach();
 
         final UpdateSkillOverviewDto updateSkillOverviewDto = new UpdateSkillOverviewDto("Das sehe ich zum ersten Mal", StatusType.SEEN);
 

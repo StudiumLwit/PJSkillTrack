@@ -1,13 +1,10 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
-import de.pjskilltrack.pjskilltrack.entity.Student;
-import de.pjskilltrack.pjskilltrack.repository.StudentRepository;
-import de.pjskilltrack.pjskilltrack.util.TestDataFactory;
+import de.pjskilltrack.pjskilltrack.util.TestContextManager;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,39 +19,19 @@ import static io.restassured.RestAssured.given;
 public abstract class AbstractDbTest {
 
     @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    protected TestDataFactory testDataFactory;
+    protected TestContextManager testContextManager;
 
     @LocalServerPort
     private Integer port;
 
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+    static final PostgreSQLContainer<?> postgres;
 
-    @BeforeAll
-    static void beforeAll() {
+    static {
+        postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+                .withDatabaseName("testdb")
+                .withUsername("test")
+                .withPassword("test");
         postgres.start();
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
-
-
-        studentRepository.deleteAll();
-
-        // Set up student for authentication
-        final Student student = new Student();
-        student.setEmail("student");
-        student.setName("Student");
-        student.setPassword("$2a$12$buvjYttpZPdMcjeZQ5FXDeZIolHUG5AoEsbbP29OtcIpLd1zlAzFW"); // password: student
-        studentRepository.save(student);
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
     }
 
     @DynamicPropertySource
@@ -62,6 +39,18 @@ public abstract class AbstractDbTest {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.baseURI = "http://localhost:" + port;
+
+        testContextManager.createAuthenticatedStudent();
+    }
+
+    @AfterEach
+    void tearDown() {
+        testContextManager.tearDown();
     }
 
     protected static RequestSpecification givenStudent() {

@@ -11,7 +11,7 @@ public class StudentControllerTest extends AbstractDbTest {
 
     @Test
     void me_authenticated() {
-        final Student student = testDataFactory.getAuthenticatedStudent();
+        final Student student = testContextManager.getAuthenticatedStudent();
 
         givenStudent()
                 .when()
