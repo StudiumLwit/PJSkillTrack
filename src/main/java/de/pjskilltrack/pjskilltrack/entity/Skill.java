@@ -2,6 +2,7 @@ package de.pjskilltrack.pjskilltrack.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,8 +14,12 @@ public class Skill {
     private String name;
     private String description;
 
-    @ManyToMany(mappedBy = "skills")
-    private Set<Faculty> faculties;
+    @ManyToMany
+    @JoinTable(
+            name = "skill_faculty",
+            joinColumns = @JoinColumn(name = "skill_id"),
+            inverseJoinColumns = @JoinColumn(name = "faculty_id"))
+    private Set<Faculty> faculties = new HashSet<>();
 
     @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Progress> progresses;
@@ -62,6 +67,16 @@ public class Skill {
     public void addProgress(final Progress progress) {
         this.progresses.add(progress);
         progress.setSkill(this);
+    }
+
+    public void addFaculty(final Faculty faculty) {
+        this.faculties.add(faculty);
+        faculty.getSkills().add(this);
+    }
+
+    public void removeFaculty(final Faculty faculty) {
+        this.faculties.remove(faculty);
+        faculty.getSkills().remove(this);
     }
 
     @Override
