@@ -4,15 +4,11 @@ import de.pjskilltrack.pjskilltrack.entity.StatusType;
 import de.pjskilltrack.pjskilltrack.transfer.UpdateSkillOverviewDto;
 import de.pjskilltrack.pjskilltrack.util.TestDataFactory;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class SkillControllerTest extends AbstractDbTest {
-
-    @Autowired
-    private TestDataFactory testDataFactory;
 
     @Test
     void getSkillsByFacultyId_empty() {

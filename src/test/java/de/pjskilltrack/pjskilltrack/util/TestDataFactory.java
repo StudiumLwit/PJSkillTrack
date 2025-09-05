@@ -22,7 +22,7 @@ public class TestDataFactory {
     @Autowired
     private StudentRepository studentRepository;
 
-    private Student getAuthenticatedStudent() {
+    public Student getAuthenticatedStudent() {
         // In AbstractDbTest, there is always one student created
         return studentRepository.findAll().stream().findFirst().orElseThrow();
     }
@@ -71,6 +71,13 @@ public class TestDataFactory {
         final Faculty faculty = createFaculty("Chirurgie");
         final Skill skill = createSkill("Medikamente verschreiben", "Immer über Nebenwirkungen aufklären", faculty);
         return new TestContext(List.of(faculty), List.of(skill), List.of(), List.of());
+    }
+
+    public TestContext threeUnsortedFaculties() {
+        final Faculty faculty1 = createFaculty("Chirurgie");
+        final Faculty faculty2 = createFaculty("Pädiatrie");
+        final Faculty faculty3 = createFaculty("Innere Medizin");
+        return new TestContext(List.of(faculty1, faculty2, faculty3), List.of(), List.of(), List.of());
     }
 
     public static class TestContext {

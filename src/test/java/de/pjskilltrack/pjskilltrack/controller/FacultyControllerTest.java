@@ -1,0 +1,34 @@
+package de.pjskilltrack.pjskilltrack.controller;
+
+import de.pjskilltrack.pjskilltrack.entity.Faculty;
+import de.pjskilltrack.pjskilltrack.util.TestDataFactory;
+import org.junit.jupiter.api.Test;
+
+import java.util.Comparator;
+import java.util.List;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+
+public class FacultyControllerTest extends AbstractDbTest {
+
+    @Test
+    void getAllFacultiesAlphabetically() {
+        final TestDataFactory.TestContext context = testDataFactory.threeUnsortedFaculties();
+
+        final List<String> sortedFacultyNames = context.faculties.stream()
+                .sorted(Comparator.comparing(Faculty::getName))
+                .map(Faculty::getName)
+                .toList();
+
+        givenStudent()
+                .when()
+                .get("/api/faculty")
+                .then()
+                .statusCode(200)
+                .body("", hasSize(sortedFacultyNames.size()))
+                .body("[0].name", equalTo(sortedFacultyNames.get(0)))
+                .body("[1].name", equalTo(sortedFacultyNames.get(1)))
+                .body("[2].name", equalTo(sortedFacultyNames.get(2)));
+    }
+}

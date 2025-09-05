@@ -2,6 +2,7 @@ package de.pjskilltrack.pjskilltrack.controller;
 
 import de.pjskilltrack.pjskilltrack.entity.Student;
 import de.pjskilltrack.pjskilltrack.repository.StudentRepository;
+import de.pjskilltrack.pjskilltrack.util.TestDataFactory;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -22,6 +23,9 @@ public abstract class AbstractDbTest {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    protected TestDataFactory testDataFactory;
 
     @LocalServerPort
     private Integer port;
