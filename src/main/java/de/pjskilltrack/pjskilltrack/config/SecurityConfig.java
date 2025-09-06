@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout", "/error").permitAll()
+                        .requestMatchers("/", "/index.html", "/assets/**", "/login", "/logout", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -69,6 +69,6 @@ public abstract class AbstractDbTest {
     }
 
     protected static RequestSpecification givenDefaultStudent() {
-        return given().auth().basic("student", "student").contentType(ContentType.JSON);
+        return given().auth().preemptive().basic("student", "student").contentType(ContentType.JSON);
     }
 }
