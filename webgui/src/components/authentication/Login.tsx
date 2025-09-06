@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import {Button, Container, Paper, PasswordInput, TextInput, Title} from "@mantine/core";
 import {useState} from "react";
-import styled from "styled-components";
 import useAuthStore from "../../store/auth/useAuthStore.ts";
 
 const StyledTitle = styled(Title)`
