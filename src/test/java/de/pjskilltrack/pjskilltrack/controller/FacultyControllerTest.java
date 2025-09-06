@@ -1,7 +1,7 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
 import de.pjskilltrack.pjskilltrack.entity.Faculty;
-import de.pjskilltrack.pjskilltrack.util.TestContextManager;
+import de.pjskilltrack.pjskilltrack.util.TestContextBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
@@ -14,14 +14,19 @@ public class FacultyControllerTest extends AbstractDbTest {
 
     @Test
     void getAllFacultiesAlphabetically() {
-        final TestContextManager.TestContext context = testContextManager.threeUnsortedFaculties();
+        final TestContextBuilder.TestContext context = testContextBuilder
+                .withDefaultStudent()
+                .withFaculty("Chirurgie")
+                .withFaculty("Innere Medizin")
+                .withFaculty("Anatomie")
+                .build();
 
-        final List<String> sortedFacultyNames = context.faculties.stream()
+        final List<String> sortedFacultyNames = context.getFaculties().stream()
                 .sorted(Comparator.comparing(Faculty::getName))
                 .map(Faculty::getName)
                 .toList();
 
-        givenStudent()
+        givenDefaultStudent()
                 .when()
                 .get("/api/faculty")
                 .then()

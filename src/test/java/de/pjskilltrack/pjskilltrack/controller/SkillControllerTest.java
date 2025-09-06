@@ -1,10 +1,11 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
-import de.pjskilltrack.pjskilltrack.entity.Skill;
 import de.pjskilltrack.pjskilltrack.entity.StatusType;
 import de.pjskilltrack.pjskilltrack.transfer.UpdateSkillOverviewDto;
-import de.pjskilltrack.pjskilltrack.util.TestContextManager;
+import de.pjskilltrack.pjskilltrack.util.TestContextBuilder;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -13,7 +14,9 @@ public class SkillControllerTest extends AbstractDbTest {
 
     @Test
     void getSkillsByFacultyId_empty() {
-        givenStudent()
+        testContextBuilder.withDefaultStudent().build();
+
+        givenDefaultStudent()
                 .when()
                 .get("/api/skill?facultyId=1")
                 .then()
@@ -23,18 +26,24 @@ public class SkillControllerTest extends AbstractDbTest {
 
     @Test
     void getSkillsByFacultyId_oneEntry() {
-        final TestContextManager.TestContext context = testContextManager.skillFacultyProgressAndStatusTransitionEach();
+        final TestContextBuilder.TestContext context = testContextBuilder
+                .withDefaultStudent()
+                .withFaculty("Chirurgie")
+                .withSkill("Medikamente verschreiben", "Immer über Nebenwirkungen aufklären", testContextBuilder.getFaculties().get(0))
+                .withProgress("Das habe ich noch nie gemacht", testContextBuilder.getSkills().get(0), testContextBuilder.getStudents().get(0))
+                .withStatusTransition(StatusType.SEEN, new Timestamp(System.currentTimeMillis()), testContextBuilder.getProgresses().get(0))
+                .build();
 
-        givenStudent()
+        givenDefaultStudent()
                 .when()
-                .get("/api/skill?facultyId=" + context.faculties.get(0).getId())
+                .get("/api/skill?facultyId=" + context.getFirstFaculty().getId())
                 .then()
                 .statusCode(200)
                 .body("", hasSize(1))
-                .body("[0].name", equalTo(context.skills.get(0).getName()))
-                .body("[0].description", equalTo(context.skills.get(0).getDescription()))
-                .body("[0].note", equalTo(context.progresses.get(0).getNote()))
-                .body("[0].statusType", equalTo(context.statusTransitions.get(0).getNewStatus().name()));
+                .body("[0].name", equalTo(context.getFirstSkill().getName()))
+                .body("[0].description", equalTo(context.getFirstSkill().getDescription()))
+                .body("[0].note", equalTo(context.getFirstProgress().getNote()))
+                .body("[0].statusType", equalTo(context.getFirstStatusTransition().getNewStatus().name()));
     }
 
     @Test
@@ -48,37 +57,46 @@ public class SkillControllerTest extends AbstractDbTest {
 
     @Test
     void updateSkill_existingProgress() {
-        final TestContextManager.TestContext context = testContextManager.skillFacultyProgressAndStatusTransitionEach();
-        final Skill contextSkill = context.skills.get(0);
+        final TestContextBuilder.TestContext context = testContextBuilder
+                .withDefaultStudent()
+                .withFaculty("Chirurgie")
+                .withSkill("Medikamente verschreiben", "Immer über Nebenwirkungen aufklären", testContextBuilder.getFaculties().get(0))
+                .withProgress("Das habe ich noch nie gemacht", testContextBuilder.getSkills().get(0), testContextBuilder.getStudents().get(0))
+                .withStatusTransition(StatusType.SEEN, new Timestamp(System.currentTimeMillis()), testContextBuilder.getProgresses().get(0))
+                .build();
 
         final UpdateSkillOverviewDto updateSkillOverviewDto = new UpdateSkillOverviewDto("Ich habe das gemacht", StatusType.DONE);
 
-        givenStudent()
+        givenDefaultStudent()
                 .body(updateSkillOverviewDto)
                 .when()
-                .put("/api/skill/" + contextSkill.getId())
+                .put("/api/skill/" + context.getFirstSkill().getId())
                 .then()
                 .statusCode(200)
-                .body("name", equalTo(contextSkill.getName()))
-                .body("description", equalTo(contextSkill.getDescription()))
+                .body("name", equalTo(context.getFirstSkill().getName()))
+                .body("description", equalTo(context.getFirstSkill().getDescription()))
                 .body("note", equalTo(updateSkillOverviewDto.note()))
                 .body("statusType", equalTo(updateSkillOverviewDto.statusType().name()));
     }
 
     @Test
     void updateSkill_noExistingProgress() {
-        final TestContextManager.TestContext context = testContextManager.oneSkillAndFacultyEach();
+        final TestContextBuilder.TestContext context = testContextBuilder
+                .withDefaultStudent()
+                .withFaculty("Chirurgie")
+                .withSkill("Medikamente verschreiben", "Immer über Nebenwirkungen aufklären", testContextBuilder.getFaculties().get(0))
+                .build();
 
         final UpdateSkillOverviewDto updateSkillOverviewDto = new UpdateSkillOverviewDto("Das sehe ich zum ersten Mal", StatusType.SEEN);
 
-        givenStudent()
+        givenDefaultStudent()
                 .body(updateSkillOverviewDto)
                 .when()
-                .put("/api/skill/" + context.skills.get(0).getId())
+                .put("/api/skill/" + context.getFirstSkill().getId())
                 .then()
                 .statusCode(200)
-                .body("name", equalTo(context.skills.get(0).getName()))
-                .body("description", equalTo(context.skills.get(0).getDescription()))
+                .body("name", equalTo(context.getFirstSkill().getName()))
+                .body("description", equalTo(context.getFirstSkill().getDescription()))
                 .body("note", equalTo(updateSkillOverviewDto.note()))
                 .body("statusType", equalTo(updateSkillOverviewDto.statusType().name()));
     }

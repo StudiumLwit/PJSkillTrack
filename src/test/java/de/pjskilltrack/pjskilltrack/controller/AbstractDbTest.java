@@ -1,6 +1,7 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
-import de.pjskilltrack.pjskilltrack.util.TestContextManager;
+import de.pjskilltrack.pjskilltrack.repository.*;
+import de.pjskilltrack.pjskilltrack.util.TestContextBuilder;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -19,7 +20,17 @@ import static io.restassured.RestAssured.given;
 public abstract class AbstractDbTest {
 
     @Autowired
-    protected TestContextManager testContextManager;
+    private FacultyRepository facultyRepository;
+    @Autowired
+    private SkillRepository skillRepository;
+    @Autowired
+    private ProgressRepository progressRepository;
+    @Autowired
+    private StatusTransitionRepository statusTransitionRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+
+    protected TestContextBuilder testContextBuilder;
 
     @LocalServerPort
     private Integer port;
@@ -45,15 +56,19 @@ public abstract class AbstractDbTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
 
-        testContextManager.createAuthenticatedStudent();
+        this.testContextBuilder = new TestContextBuilder(progressRepository, skillRepository, statusTransitionRepository, facultyRepository, studentRepository);
     }
 
     @AfterEach
     void tearDown() {
-        testContextManager.tearDown();
+        statusTransitionRepository.deleteAll();
+        progressRepository.deleteAll();
+        studentRepository.deleteAll();
+        skillRepository.deleteAll();
+        facultyRepository.deleteAll();
     }
 
-    protected static RequestSpecification givenStudent() {
+    protected static RequestSpecification givenDefaultStudent() {
         return given().auth().basic("student", "student").contentType(ContentType.JSON);
     }
 }

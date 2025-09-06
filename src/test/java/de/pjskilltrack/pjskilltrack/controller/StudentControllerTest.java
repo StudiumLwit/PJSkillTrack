@@ -3,7 +3,6 @@ package de.pjskilltrack.pjskilltrack.controller;
 import de.pjskilltrack.pjskilltrack.entity.Student;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 public class StudentControllerTest extends AbstractDbTest {
@@ -11,9 +10,12 @@ public class StudentControllerTest extends AbstractDbTest {
 
     @Test
     void me_authenticated() {
-        final Student student = testContextManager.getAuthenticatedStudent();
+        final Student student = testContextBuilder
+                .withDefaultStudent()
+                .build()
+                .getFirstStudent();
 
-        givenStudent()
+        givenDefaultStudent()
                 .when()
                 .get("/api/auth/me")
                 .then()
@@ -24,7 +26,9 @@ public class StudentControllerTest extends AbstractDbTest {
 
     @Test
     void me_unauthenticated() {
-        given()
+        // Notice that we do not set up any student in the context here
+
+        givenDefaultStudent()
                 .when()
                 .get("/api/auth/me")
                 .then()
