@@ -10,9 +10,7 @@ const useAuthStore = create<TAuthState>()(
         loggedInStudent: undefined,
         getMe: () => {
           apiGetMe()
-          .then(res => {
-            return res.data
-          })
+          .then(res => res.data)
           .then(res => set(() => ({loggedInStudent: res})))
           .catch(() => set(() => ({loggedInStudent: undefined})));
         },

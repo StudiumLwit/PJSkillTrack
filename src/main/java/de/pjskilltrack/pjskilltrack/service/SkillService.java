@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkillService {
-    List<Skill> getAllSkillsByFacultyIdAlphabetically(Long facultyId);
+    List<Skill> getAllSkillsByFacultyNameAlphabetically(String facultyName);
 
     Optional<Progress> getProgressForSkill(Skill skill);
 

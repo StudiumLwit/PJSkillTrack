@@ -13,19 +13,19 @@ import static org.hamcrest.Matchers.*;
 public class SkillControllerTest extends AbstractDbTest {
 
     @Test
-    void getSkillsByFacultyId_empty() {
+    void getSkillsByFacultyName_empty() {
         testContextBuilder.withDefaultStudent().build();
 
         givenDefaultStudent()
                 .when()
-                .get("/api/skill?facultyId=1")
+                .get("/api/skill?facultyName=Chirurgie")
                 .then()
                 .statusCode(200)
                 .body("", empty());
     }
 
     @Test
-    void getSkillsByFacultyId_oneEntry() {
+    void getSkillsByFacultyName_oneEntry() {
         final TestContextBuilder.TestContext context = testContextBuilder
                 .withDefaultStudent()
                 .withFaculty("Chirurgie")
@@ -36,7 +36,7 @@ public class SkillControllerTest extends AbstractDbTest {
 
         givenDefaultStudent()
                 .when()
-                .get("/api/skill?facultyId=" + context.getFirstFaculty().getId())
+                .get("/api/skill?facultyName=" + context.getFirstFaculty().getName())
                 .then()
                 .statusCode(200)
                 .body("", hasSize(1))
@@ -47,10 +47,10 @@ public class SkillControllerTest extends AbstractDbTest {
     }
 
     @Test
-    void getSkillsByFacultyId_unauthenticated() {
+    void getSkillsByFacultyName_unauthenticated() {
         given()
                 .when()
-                .get("/api/skill?facultyId=1")
+                .get("/api/skill?facultyName=Chirurgie")
                 .then()
                 .statusCode(401);
     }

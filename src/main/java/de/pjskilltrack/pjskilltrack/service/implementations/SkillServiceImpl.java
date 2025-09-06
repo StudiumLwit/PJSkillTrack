@@ -36,8 +36,8 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public List<Skill> getAllSkillsByFacultyIdAlphabetically(final Long facultyId) {
-        return skillRepository.findByFacultiesIdOrderByName(facultyId);
+    public List<Skill> getAllSkillsByFacultyNameAlphabetically(final String facultyName) {
+        return skillRepository.findByFacultiesNameOrderByName(facultyName);
     }
 
     @Override
