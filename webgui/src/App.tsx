@@ -1,11 +1,13 @@
-import {useEffect, useState} from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {MantineProvider} from "@mantine/core";
+import {useEffect} from 'react'
 import './App.css'
+import {Login} from "./components/authentication/Login.tsx";
+import Dashboard from "./components/Dashboard.tsx";
 import useAuthStore from "./store/auth/useAuthStore.ts";
+import theme from "./theme.ts";
+import '@mantine/core/styles.css';
 
 function App() {
-  const [count, setCount] = useState(0);
 
   const {loggedInStudent, getMe} = useAuthStore();
 
@@ -14,28 +16,12 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo"/>
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo"/>
-        </a>
-      </div>
+    <MantineProvider theme={theme}>
       {loggedInStudent ?
-        <h1>Hallo, {loggedInStudent.name}!</h1> :
-        <h1>Du bist nicht eingeloggt!</h1>
+        <Dashboard/> :
+        <Login/>
       }
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </MantineProvider>
   )
 }
 
