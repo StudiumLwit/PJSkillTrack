@@ -3,6 +3,7 @@ import {Accordion, Button, Textarea} from "@mantine/core";
 import {useState} from "react";
 import type {TSkillOverview} from "../../store/skill/types.ts";
 import useSkillStore from "../../store/skill/useSkillStore.ts";
+import StatusIcon from "./StatusIcon.tsx";
 
 type TProps = {
   skill: TSkillOverview
@@ -33,10 +34,11 @@ const SkillCard: React.FC<TProps> = ({skill}) => {
 
 
   return (
-    <div>
+    <div onClick={e => e.stopPropagation()}>
       <Accordion.Control>
         <TopRow>
           <h2>{name}</h2>
+          <StatusIcon skill={skill}/>
         </TopRow>
       </Accordion.Control>
       <Accordion.Panel>

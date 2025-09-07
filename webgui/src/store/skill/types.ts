@@ -1,21 +1,23 @@
+import type {IconType} from "react-icons";
+
 export type TSkillOverview = {
   id: number,
   name: string,
   description: string,
   note: string,
-  statusType: TStatusType,
+  statusType: string,
   lastModified: Date
 }
 
 export type TUpdateSkillOverview = {
   note: string,
-  statusType: TStatusType,
+  statusType: string,
 
 }
 
 type TSkillStateProps = {
   skills: TSkillOverview[],
-  skillSearch: string
+  skillSearch: string,
 }
 
 type TSkillStateActions = {
@@ -26,4 +28,9 @@ type TSkillStateActions = {
 
 export type TSkillState = TSkillStateProps & TSkillStateActions;
 
-type TStatusType = "UNDEFINED" | "SEEN" | "DONE" | "ROUTINE"
+export type TStatusType = {
+  key: string,
+  label: string,
+  colorHex: string,
+  icon?: IconType
+}
