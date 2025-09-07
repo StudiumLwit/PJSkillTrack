@@ -19,7 +19,8 @@ const SearchGroup: React.FC = () => {
   )
 
   return <>
-    <Select searchable value={activeFaculty} allowDeselect={false} onChange={(e) => setActiveFaculty(e || "")}
+    <Select searchable value={activeFaculty} placeholder="Fachrichtung auswählen" allowDeselect={false}
+            onChange={(e) => setActiveFaculty(e || "")}
             data={facultyNames}/>
     <Autocomplete
       placeholder="Skills durchsuchen"

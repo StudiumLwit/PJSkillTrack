@@ -1,4 +1,4 @@
-import {Accordion, AppShell} from "@mantine/core";
+import {Accordion, AppShell, Text} from "@mantine/core";
 import {useEffect} from "react";
 import useFacultyStore from "../../store/faculty/useFacultyStore.ts";
 import useSkillStore from "../../store/skill/useSkillStore.ts";
@@ -15,13 +15,15 @@ const SkillList: React.FC = () => {
 
   return (
     <AppShell.Main>
-      <Accordion variant={"separated"} chevronPosition={"left"} chevronIconSize={"32px"}>
-        {skills.filter(s => s.name.toLowerCase().includes(skillSearch.toLowerCase())).map(s => (
-          <Accordion.Item key={s.name} value={s.name}>
-            <SkillCard skill={s}/>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+      {skills.length > 0 ?
+        <Accordion variant={"separated"} chevronPosition={"left"} chevronIconSize={"32px"}>
+          {skills.filter(s => s.name.toLowerCase().includes(skillSearch.toLowerCase())).map(s => (
+            <Accordion.Item key={s.name} value={s.name}>
+              <SkillCard skill={s}/>
+            </Accordion.Item>
+          ))}
+        </Accordion> :
+        <Text>Bitte wähle eine Fachrichtung aus</Text>}
     </AppShell.Main>
   )
 }
