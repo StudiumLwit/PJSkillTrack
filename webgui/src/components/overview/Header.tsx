@@ -4,6 +4,7 @@ import {useDisclosure} from "@mantine/hooks";
 import * as React from "react";
 import {MdLogout} from "react-icons/md";
 import useAuthStore from "../../store/auth/useAuthStore.ts";
+import ProgressModal from "./ProgressModal.tsx";
 import SearchGroup from "./SearchGroup.tsx";
 
 
@@ -48,8 +49,9 @@ const Header: React.FC<TProps> = ({onToggleNavBar}) => {
 
         <Group visibleFrom="sm">
           <SearchGroup/>
+          <ProgressModal/>
         </Group>
-        <ActionIcon variant="light" aria-label="Settings" onClick={logout}>
+        <ActionIcon variant="light" aria-label="Logout" onClick={logout}>
           <MdLogout/>
         </ActionIcon>
       </StyledInnerDiv>
