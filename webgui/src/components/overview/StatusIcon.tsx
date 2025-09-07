@@ -17,7 +17,7 @@ const StatusIcon: React.FC<TProps> = ({skill}) => {
   if (!currentStatusType) {
     console.warn(`Undefined status type '${statusType}' found, will continue with fallback`)
   }
-  const {icon: Icon, colorHex, key} = currentStatusType ?? fallbackStatusType;
+  const {icon: Icon, colorHex, key, label} = currentStatusType ?? fallbackStatusType;
 
   const onStatusTypeChange = (newStatusType: string) => {
     updateSkill(skill.id, {note: skill.note, statusType: newStatusType})
@@ -28,7 +28,7 @@ const StatusIcon: React.FC<TProps> = ({skill}) => {
       <Popover width={300} trapFocus position="bottom" withArrow shadow="md">
         <Popover.Target>
           <div>
-            {Icon ? <Icon size={"50px"} cursor={"pointer"} strokeWidth={"0.5"} color={colorHex}/> : null}
+            {Icon ? <Icon size={"50px"} cursor={"pointer"} strokeWidth={"0.5"} color={colorHex} title={label}/> : null}
           </div>
         </Popover.Target>
         <Popover.Dropdown>

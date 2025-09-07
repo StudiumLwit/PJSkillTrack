@@ -1,13 +1,10 @@
 import styled from "@emotion/styled";
-import {ActionIcon, AppShell, Autocomplete, Burger, Group, Select} from "@mantine/core";
+import {ActionIcon, AppShell, Burger, Group, Title, useMantineTheme} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import * as React from "react";
-import {useEffect} from "react";
-import {BiSearch} from "react-icons/bi";
 import {MdLogout} from "react-icons/md";
 import useAuthStore from "../../store/auth/useAuthStore.ts";
-import useFacultyStore from "../../store/faculty/useFacultyStore.ts";
-import useSkillStore from "../../store/skill/useSkillStore.ts";
+import SearchGroup from "./SearchGroup.tsx";
 
 
 const StyledHeader = styled(AppShell.Header)`
@@ -30,18 +27,13 @@ type TProps = {
   onToggleNavBar: () => void
 }
 
+
 const Header: React.FC<TProps> = ({onToggleNavBar}) => {
   const [opened, {toggle}] = useDisclosure(false);
 
+  const theme = useMantineTheme();
   const logout = useAuthStore(state => state.logout);
-  const updateSkillSearch = useSkillStore(state => state.updateSkillSearch)
-  const {activeFaculty, faculties, setActiveFaculty, getFaculties} = useFacultyStore();
-  const data = faculties.map(f => f.name);
 
-  useEffect(() => {
-      getFaculties();
-    }, []
-  )
 
   return (
     <StyledHeader>
@@ -51,19 +43,11 @@ const Header: React.FC<TProps> = ({onToggleNavBar}) => {
             onToggleNavBar()
             toggle()
           }} size="sm" hiddenFrom="sm"/>
-          <h1>PJ SkillTrack</h1>
+          <Title fz={theme.fontSizes}>PJ SkillTrack</Title>
         </Group>
 
         <Group visibleFrom="sm">
-          <Select searchable value={activeFaculty} allowDeselect={false} onChange={e => setActiveFaculty(e || "")}
-                  data={data}/>
-          <Autocomplete
-            placeholder="Search"
-            onChange={updateSkillSearch}
-            leftSection={<BiSearch size={16}/>}
-            data={['React', 'Angular', 'Vue', 'Next.js', 'Riot.js', 'Svelte', 'Blitz.js']}
-            visibleFrom="xs"
-          />
+          <SearchGroup/>
         </Group>
         <ActionIcon variant="light" aria-label="Settings" onClick={logout}>
           <MdLogout/>
