@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "com.github.node-gradle.node" version "7.1.0"
 }
 
 group = 'de.pjskilltrack'
@@ -12,6 +13,14 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+node {
+    version = '20.12.2' // or your preferred version
+    npmVersion = '10.5.0'
+    download = true // downloads and uses a local version
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
 }
 
 repositories {
@@ -37,3 +46,21 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+def frontendDir = "$rootDir/webgui"
+def frontendBuildDir = "$frontendDir/dist"
+def backendStaticDir = "$projectDir/src/main/resources/static"
+
+tasks.register('npmBuild', NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'build']
+    workingDir = file(frontendDir)
+}
+
+tasks.register('copyFrontendToBackend', Copy) {
+    dependsOn 'npmBuild'
+    from(frontendBuildDir)
+    into(backendStaticDir)
+}
+
+processResources.dependsOn 'copyFrontendToBackend'

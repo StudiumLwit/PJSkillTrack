@@ -23,8 +23,8 @@ public class SkillController {
     }
 
     @GetMapping()
-    public List<SkillOverviewDto> getSkillsByFacultyId(@RequestParam final Long facultyId) {
-        return skillService.getAllSkillsByFacultyIdAlphabetically(facultyId)
+    public List<SkillOverviewDto> getSkillsByFacultyName(@RequestParam final String facultyName) {
+        return skillService.getAllSkillsByFacultyNameAlphabetically(facultyName)
                 .stream()
                 .map(skillConverter::convertSkillToSkillOverviewDto)
                 .toList();

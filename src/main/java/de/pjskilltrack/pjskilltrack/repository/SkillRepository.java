@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SkillRepository extends JpaRepository<Skill, Long>
-{
-    List<Skill> findByFacultiesIdOrderByName(Long facultyId);
+public interface SkillRepository extends JpaRepository<Skill, Long> {
+    List<Skill> findByFacultiesNameOrderByName(String facultyName);
 }
