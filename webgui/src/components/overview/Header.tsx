@@ -4,8 +4,8 @@ import {useDisclosure} from "@mantine/hooks";
 import * as React from "react";
 import {MdLogout} from "react-icons/md";
 import useAuthStore from "../../store/auth/useAuthStore.ts";
-import ProgressModal from "./ProgressModal.tsx";
 import SearchGroup from "./SearchGroup.tsx";
+import ProgressModal from "./statistics/ProgressModal.tsx";
 
 
 const StyledHeader = styled(AppShell.Header)`
