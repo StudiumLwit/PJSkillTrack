@@ -21,7 +21,7 @@ const ProgressBarList: React.FC = () => {
                   const countRelativeToHundred = count / totalCount * 100
                   const {colorHex, label} = statusUi[status];
                   return (
-                    <Tooltip label={`${label}: ${count} (${countRelativeToHundred}%)`}>
+                    <Tooltip label={`${label}: ${count} (${countRelativeToHundred.toFixed(2)}%)`}>
                       <Progress.Section value={countRelativeToHundred} color={colorHex}/>
                     </Tooltip>
                   )

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {Button, Container, Paper, PasswordInput, TextInput, Title} from "@mantine/core";
+import {Alert, Button, Container, Paper, PasswordInput, TextInput, Title} from "@mantine/core";
 import {useState} from "react";
 import useAuthStore from "../../store/auth/useAuthStore.ts";
 
@@ -10,7 +10,7 @@ const StyledTitle = styled(Title)`
 
 export function Login() {
 
-  const login = useAuthStore(state => state.login);
+  const {login, errorMsg} = useAuthStore();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,6 +27,9 @@ export function Login() {
 
 
       <Paper withBorder shadow="sm" p={22} mt={30} radius="md">
+        {errorMsg && (
+          <Alert title={errorMsg} color="red" radius="md" mb="md"/>
+        )}
         <TextInput label="Email" placeholder="du@pjskilltrack.de" required radius="md"
                    onChange={e => setEmail(e.target.value)}/>
         <PasswordInput label="Passwort" placeholder="Dein Passwort" required mt="md" radius="md"

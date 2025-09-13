@@ -10,7 +10,8 @@ export type TAuthStateActions = {
 }
 
 export type TAuthStateProps = {
-  loggedInStudent?: TStudent
+  loggedInStudent?: TStudent,
+  errorMsg?: string
 };
 
 export type TAuthState = TAuthStateProps & TAuthStateActions;
