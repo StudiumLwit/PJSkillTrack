@@ -1,4 +1,5 @@
 import {Button, Group, Popover} from "@mantine/core";
+import {useMediaQuery} from "@mantine/hooks";
 import type {TSkillOverview} from "../../store/skill/types.ts";
 import useSkillStore from "../../store/skill/useSkillStore.ts";
 import {fallbackStatusType, statusUi} from "../../utils/statusUi.ts";
@@ -10,6 +11,7 @@ type TProps = {
 const StatusIcon: React.FC<TProps> = ({skill}) => {
   const {statusType} = skill;
 
+  const smallScreen = useMediaQuery("(max-width: 768px)");
   const updateSkill = useSkillStore(state => state.updateSkill)
 
   const availableStatusTypes = Object.values(statusUi);
@@ -27,9 +29,8 @@ const StatusIcon: React.FC<TProps> = ({skill}) => {
     <div onClick={e => e.stopPropagation()}>
       <Popover width={300} trapFocus position="bottom" withArrow shadow="md">
         <Popover.Target>
-          <div>
-            {Icon ? <Icon size={"50px"} cursor={"pointer"} strokeWidth={"0.5"} color={colorHex} title={label}/> : null}
-          </div>
+          {Icon ? <Icon size={smallScreen ? "30px" : "50px"} cursor={"pointer"} strokeWidth={"0.5"} color={colorHex}
+                        title={label}/> : null}
         </Popover.Target>
         <Popover.Dropdown>
           <Group>

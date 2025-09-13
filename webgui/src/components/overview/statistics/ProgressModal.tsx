@@ -1,4 +1,4 @@
-import {ActionIcon, Modal} from "@mantine/core";
+import {ActionIcon, Button, Group, Modal} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import * as React from "react";
 import {useEffect} from "react";
@@ -21,9 +21,15 @@ const ProgressModal: React.FC = () => {
       <Modal opened={opened} onClose={close} title="Fortschritt" size="xl">
         <ProgressBarList/>
       </Modal>
-      <ActionIcon variant="light" aria-label="Progress" onClick={open}>
+      <ActionIcon visibleFrom="sm" variant="light" aria-label="Progress" onClick={open}>
         <GiProgression/>
       </ActionIcon>
+      <Button hiddenFrom="sm" variant="light" aria-label="Progress" onClick={open}>
+        <Group>
+          <GiProgression/>
+          Statistiken
+        </Group>
+      </Button>
     </>
   )
 }
