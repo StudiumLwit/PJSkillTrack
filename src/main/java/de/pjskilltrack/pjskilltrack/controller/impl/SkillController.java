@@ -1,5 +1,6 @@
-package de.pjskilltrack.pjskilltrack.controller;
+package de.pjskilltrack.pjskilltrack.controller.impl;
 
+import de.pjskilltrack.pjskilltrack.controller.SkillOperations;
 import de.pjskilltrack.pjskilltrack.entity.Skill;
 import de.pjskilltrack.pjskilltrack.service.SkillService;
 import de.pjskilltrack.pjskilltrack.transfer.SkillOverviewDto;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/skill")
-public class SkillController {
+public class SkillController implements SkillOperations {
     private final SkillService skillService;
     private final SkillConverter skillConverter;
 
@@ -22,7 +23,7 @@ public class SkillController {
         this.skillConverter = skillConverter;
     }
 
-    @GetMapping()
+    @Override
     public List<SkillOverviewDto> getSkillsByFacultyName(@RequestParam final String facultyName) {
         return skillService.getAllSkillsByFacultyNameAlphabetically(facultyName)
                 .stream()
@@ -30,7 +31,7 @@ public class SkillController {
                 .toList();
     }
 
-    @PutMapping("/{skillId}")
+    @Override
     public SkillOverviewDto updateSkill(@PathVariable final Long skillId, @RequestBody final UpdateSkillOverviewDto updateSkillOverviewDto) {
         final Skill updatedSkill = skillService.updateSkill(skillId, updateSkillOverviewDto);
         return skillConverter.convertSkillToSkillOverviewDto(updatedSkill);

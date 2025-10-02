@@ -1,5 +1,6 @@
-package de.pjskilltrack.pjskilltrack.controller;
+package de.pjskilltrack.pjskilltrack.controller.impl;
 
+import de.pjskilltrack.pjskilltrack.controller.StudentOperations;
 import de.pjskilltrack.pjskilltrack.entity.Student;
 import de.pjskilltrack.pjskilltrack.service.StudentService;
 import de.pjskilltrack.pjskilltrack.transfer.StudentDto;
@@ -9,19 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-public class StudentController
-{
+public class StudentController implements StudentOperations {
     private final StudentService studentService;
 
     @Autowired
-    public StudentController(StudentService studentService)
-    {
+    public StudentController(final StudentService studentService) {
         this.studentService = studentService;
     }
 
-    @RequestMapping("/me")
+    @Override
     public StudentDto me() {
-        Student currentStudent =  studentService.getCurrentStudent();
+        final Student currentStudent = studentService.getCurrentStudent();
         return new StudentDto(currentStudent.getUsername(), currentStudent.getName());
     }
 }
