@@ -1,6 +1,6 @@
 # PJ SkillTrack
 
-Informationen zum Projekt und zu getroffenen Architektur-/Technologieentscheidungen befinden sich unter `artefakte/*`.
+[//]: # (Informationen zum Projekt und zu getroffenen Architektur-/Technologieentscheidungen befinden sich unter `artefakte/*`.)
 
 ## Ausführung
 
@@ -8,13 +8,15 @@ Für die Ausführung von PJ SkillTrack gelten folgende Voraussetzungen:
 
 - Java 17+
 - PostgreSQL 16 mit angelegter Datenbank "pjskilltrack"
-- unten aufgeführte Umgebungsvariablen sind verfügbar bzw. werden über den unten stehenden java-Befehl eingebunden
+- unten aufgeführte Umgebungsvariablen sind verfügbar bzw. werden über den unten stehenden Java-Befehl eingebunden
 
 1. Die beim Build erstelle JAR-Datei downloaden
 2. Ausführen unter dem demo-Profil:
 
 ```shell
-    java -jar <Jar-Datei> --spring.profiles.active=demo --server.port=<Portnummer(default ist 8080)>
+    export PG_HOST=localhost
+    export ...
+    java -jar <Pfad zur Jar-Datei> --spring.profiles.active=demo --server.port=<Portnummer(default ist 8080)>
 ```
 
 ### Anmeldung
