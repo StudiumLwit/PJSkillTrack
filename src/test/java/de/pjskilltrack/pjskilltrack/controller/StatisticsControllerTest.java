@@ -1,41 +1,56 @@
 package de.pjskilltrack.pjskilltrack.controller;
 
+import de.pjskilltrack.pjskilltrack.controller.impl.StatisticsController;
 import de.pjskilltrack.pjskilltrack.entity.StatusType;
+import de.pjskilltrack.pjskilltrack.service.StatisticsService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-public class StatisticsControllerTest extends AbstractDbTest {
+@ExtendWith(MockitoExtension.class)
+public class StatisticsControllerTest {
+    @Mock
+    private StatisticsService statisticsService;
+
+    @InjectMocks
+    private StatisticsController statisticsController;
 
     @Test
-    void getStatusCountsPerFaculty() {
-        testContextBuilder
-                .withDefaultStudent()
-                .withFaculty("Chirurgie")
-                .withFaculty("Pädiatrie")
-                .withSkill("Medikamente verschreiben", "", testContextBuilder.getFaculties().get(0), testContextBuilder.getFaculties().get(1))
-                .withSkill("Blut abnehmen", "", testContextBuilder.getFaculties().get(0))
-                .withProgress("", testContextBuilder.getSkills().get(0), testContextBuilder.getStudents().get(0))
-                .withProgress("", testContextBuilder.getSkills().get(1), testContextBuilder.getStudents().get(0))
-                .withStatusTransition(StatusType.DONE, new Timestamp(System.currentTimeMillis()), testContextBuilder.getProgresses().get(0))
-                .withStatusTransition(StatusType.SEEN, new Timestamp(System.currentTimeMillis()), testContextBuilder.getProgresses().get(1))
-                .build();
+    void getStatusCountsPerFaculty_returnsServiceResult() {
+        final Map<String, Map<StatusType, Long>> serviceResult = new HashMap<>();
+        final Map<StatusType, Long> chirurgieMap = new EnumMap<>(StatusType.class);
+        chirurgieMap.put(StatusType.DONE, 3L);
+        chirurgieMap.put(StatusType.SEEN, 2L);
+        final Map<StatusType, Long> neuroMap = new EnumMap<>(StatusType.class);
+        neuroMap.put(StatusType.DONE, 1L);
+        serviceResult.put("Chirurgie", chirurgieMap);
+        serviceResult.put("Neurologie", neuroMap);
+        when(statisticsService.assembleStatusCountsPerFaculty()).thenReturn(serviceResult);
 
-        givenDefaultStudent()
-                .when()
-                .get("/api/statistics/statusPerFaculty")
-                .then()
-                .statusCode(200)
-                .body("Chirurgie.ROUTINE", equalTo(0))
-                .body("Chirurgie.DONE", equalTo(1))
-                .body("Chirurgie.SEEN", equalTo(1))
-                .body("Chirurgie.UNDEFINED", equalTo(0))
-                .body("Pädiatrie.ROUTINE", equalTo(0))
-                .body("Pädiatrie.DONE", equalTo(1))
-                .body("Pädiatrie.SEEN", equalTo(0))
-                .body("Pädiatrie.UNDEFINED", equalTo(0));
+        final Map<String, Map<StatusType, Long>> result = statisticsController.getStatusCountsPerFaculty();
 
+        assertThat(result).isSameAs(serviceResult);
+        verify(statisticsService, times(1)).assembleStatusCountsPerFaculty();
+        verifyNoMoreInteractions(statisticsService);
+    }
+
+    @Test
+    void getStatusCountsPerFaculty_returnsEmpty_whenServiceEmpty() {
+        when(statisticsService.assembleStatusCountsPerFaculty()).thenReturn(Map.of());
+
+        final Map<String, Map<StatusType, Long>> result = statisticsController.getStatusCountsPerFaculty();
+        
+        assertThat(result).isEmpty();
+        verify(statisticsService).assembleStatusCountsPerFaculty();
+        verifyNoMoreInteractions(statisticsService);
     }
 }
